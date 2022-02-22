@@ -1,7 +1,7 @@
 #---------------------------------------#
 # Dependencies, Linting & JS unit tests #
 #---------------------------------------#
-FROM debian:buster-slim AS dependencies
+FROM docker.io/library/debian:bullseye-slim AS dependencies
 
 # We're using sh not bash at this point
 # hadolint ignore=DL4006
@@ -9,7 +9,7 @@ RUN apt-get update                                                              
     && DEBIAN_FRONTEND=noninteractive apt-get install  -y --no-install-recommends     \
     curl                                                                              \
     software-properties-common                                                        \
-    && curl -sL https://deb.nodesource.com/setup_13.x | bash -                        \
+    && curl -sL https://deb.nodesource.com/setup_16.x | bash -                        \
     && apt-get update                                                                 \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends      \
     build-essential                                                                   \
@@ -33,7 +33,7 @@ ENV PATH $PATH:/usr/local/go/bin
 ENV GOPATH /go
 ENV PATH $PATH:/go/bin
 
-ENV GO111MODULE on 
+ENV GO111MODULE on
 RUN mkdir -p /go/ && \
     go get github.com/hashicorp/terraform/tools/terraform-bundle@v0.13.3
 
@@ -111,7 +111,7 @@ WORKDIR /app/scenario-tools
 #-----------------------#
 # Golang Build and Test #
 #-----------------------#
-FROM debian:buster-slim AS build-and-test
+FROM docker.io/library/debian:bullseye-slim AS build-and-test
 
 RUN apt-get update                                                               \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -181,7 +181,7 @@ RUN make test-unit
 #------------------#
 # Launch Container #
 #------------------#
-FROM debian:buster-slim
+FROM docker.io/library/debian:bullseye-slim
 
 RUN apt-get update                                                               \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
